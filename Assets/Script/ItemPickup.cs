@@ -15,7 +15,13 @@ public class ItemPickup : MonoBehaviour
     void PickUp()
     {
         Inventory inventory = FindObjectOfType<Inventory>();
-        inventory.Add(item);
-        Destroy(gameObject); // Destroy the item in the scene
+        if (inventory.Add(item))
+        {
+            Destroy(gameObject); // Destroy the item in the scene only if it was successfully added
+        }
+        else
+        {
+            Debug.Log("Could not pick up item. Inventory is full.");
+        }
     }
 }
