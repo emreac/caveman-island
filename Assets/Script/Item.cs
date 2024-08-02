@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class Item : MonoBehaviour
+[System.Serializable]
+public class Item
 {
     public string itemName;
-    public Sprite itemIcon;
-    // Add other item properties as needed
+    public Sprite icon;  // Add a reference to the item's icon
 }

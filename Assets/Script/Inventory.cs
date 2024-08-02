@@ -3,35 +3,33 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    public static Inventory instance;
     public List<Item> items = new List<Item>();
-    public int maxItems = 20;
+    public Transform itemsParent;
+    public InventorySlot[] slots;
 
-    private void Awake()
+    void Start()
     {
-        if (instance != null)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        slots = itemsParent.GetComponentsInChildren<InventorySlot>();
     }
 
-    public void AddItem(Item item)
+    public void Add(Item item)
     {
-        if (items.Count < maxItems)
+        items.Add(item);
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
+        for (int i = 0; i < slots.Length; i++)
         {
-            items.Add(item);
-            Debug.Log("Item added: " + item.itemName);
-            Debug.Log("Current inventory items: " + string.Join(", ", items.ConvertAll(i => i.itemName)));
-            UIManager.instance.UpdateUI();
-        }
-        else
-        {
-            Debug.Log("Inventory is full!");
+            if (i < items.Count)
+            {
+                slots[i].AddItem(items[i]);
+            }
+            else
+            {
+                slots[i].ClearSlot();
+            }
         }
     }
 }

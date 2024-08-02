@@ -23,12 +23,7 @@ public class PlayerController : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        Item item = other.GetComponent<Item>();
-        if (item != null)
-        {
-            Inventory.instance.AddItem(item);
-            Destroy(other.gameObject); // Remove the item from the scene
-        }
+        
     }
     private void UseItem(Item item)
     {
