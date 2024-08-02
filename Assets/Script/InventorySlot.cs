@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class InventorySlot : MonoBehaviour
 {
     public Image icon;
-    public Text stackSizeText; // UI element to display stack size
+  
     private Item item;
     private int stackSize;
 
@@ -19,7 +19,7 @@ public class InventorySlot : MonoBehaviour
         stackSize = count;
         icon.sprite = item.icon;
         icon.enabled = true;
-        
+     
     }
 
     public void ClearSlot()
@@ -28,17 +28,33 @@ public class InventorySlot : MonoBehaviour
         icon.sprite = null;
         icon.enabled = false;
         stackSize = 0;
-       
+     
     }
 
     public void UseItem()
     {
         if (item != null)
         {
-            item.Use();
-            // Optionally reduce stack size after use
-            RemoveFromStack(1);
+            if (CanUseItem())
+            {
+                item.Use();
+                RemoveFromStack(1);
+            }
+            else
+            {
+                Debug.Log("Item cannot be used right now.");
+            }
         }
+    }
+
+    private bool CanUseItem()
+    {
+        if (item is HealthPotion)
+        {
+            PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
+            return playerHealth != null && playerHealth.currentHealth < playerHealth.maxHealth;
+        }
+        return true; // For other item types, you might have different conditions
     }
 
     public void RemoveFromStack(int amount)
@@ -52,5 +68,5 @@ public class InventorySlot : MonoBehaviour
         
     }
 
-   
+ 
 }
