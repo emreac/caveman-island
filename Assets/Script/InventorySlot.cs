@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class InventorySlot : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class InventorySlot : MonoBehaviour
         icon.sprite = item.icon;
         icon.enabled = true;
         UpdateStackSizeText();
+
+        // Play animation when an item is added
+        PlayAddItemAnimation();
     }
 
     public void ClearSlot()
@@ -65,8 +69,8 @@ public class InventorySlot : MonoBehaviour
         stackSize -= amount;
         if (stackSize <= 0)
         {
-            Inventory inventory = FindObjectOfType<Inventory>();
-            inventory.Remove(item);
+            PlayerInventory playerInventory = FindObjectOfType<PlayerInventory>();
+            playerInventory.RemoveItem(item);
             ClearSlot();
         }
         UpdateStackSizeText();
@@ -75,5 +79,12 @@ public class InventorySlot : MonoBehaviour
     private void UpdateStackSizeText()
     {
         stackSizeText.text = stackSize > 1 ? stackSize.ToString() : "";
+    }
+
+    private void PlayAddItemAnimation()
+    {
+        // Scale up and then back to normal for a pop effect
+        transform.localScale = Vector3.one * 1.2f;
+        transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBounce);
     }
 }
