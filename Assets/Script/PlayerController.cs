@@ -6,7 +6,9 @@ using static UnityEditor.Progress;
 public class PlayerController : MonoBehaviour
 {
 
+    
 
+    [SerializeField] private Animator playerAnimator;
     public VariableJoystick joystick;
     public CharacterController controller;
     public Canvas inputCanvas;
@@ -23,8 +25,31 @@ public class PlayerController : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
+
+        if (other.CompareTag("Enemy"))
+        {
+            playerAnimator.SetBool("isAttacking", true);
+        }
+        else
+        {
+            return;
+        }
         
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            playerAnimator.SetBool("isAttacking", false);
+        }
+        else 
+        {
+            return; 
+        }
+    }
+
+
     private void UseItem(Item item)
     {
         
@@ -51,10 +76,10 @@ public class PlayerController : MonoBehaviour
 
             if (movementDirection.sqrMagnitude <= 0)
             {
-
+                playerAnimator.SetBool("isRunning", false);
                 return;
             }
-
+            playerAnimator.SetBool("isRunning", true);
             walking = true;
             var targetDirection = Vector3.RotateTowards(controller.transform.forward,
                 movementDirection, rotationSpeed * Time.deltaTime, 0f);

@@ -1,16 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class InventorySlot : MonoBehaviour
 {
     public Image icon;
-  
+    public TextMeshProUGUI stackSizeText;
     private Item item;
     private int stackSize;
+    public Player player; // Reference to the Player script
 
     void Start()
     {
-        GetComponent<Button>().onClick.AddListener(UseItem);
+        GetComponent<Button>().onClick.AddListener(OnItemClicked);
     }
 
     public void AddItem(Item newItem, int count)
@@ -19,7 +21,7 @@ public class InventorySlot : MonoBehaviour
         stackSize = count;
         icon.sprite = item.icon;
         icon.enabled = true;
-     
+        UpdateStackSizeText();
     }
 
     public void ClearSlot()
@@ -28,33 +30,34 @@ public class InventorySlot : MonoBehaviour
         icon.sprite = null;
         icon.enabled = false;
         stackSize = 0;
-     
+        UpdateStackSizeText();
+    }
+
+    public void OnItemClicked()
+    {
+        if (item != null)
+        {
+            if (item is SwordItem swordItem)
+            {
+                player.EquipSword(swordItem);
+            }
+            else if (item is HealthPotion)
+            {
+                UseItem();
+            }
+        }
     }
 
     public void UseItem()
     {
-        if (item != null)
+        if (item != null && stackSize > 0)
         {
-            if (CanUseItem())
+            bool used = item.Use();
+            if (used)
             {
-                item.Use();
                 RemoveFromStack(1);
             }
-            else
-            {
-                Debug.Log("Item cannot be used right now.");
-            }
         }
-    }
-
-    private bool CanUseItem()
-    {
-        if (item is HealthPotion)
-        {
-            PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
-            return playerHealth != null && playerHealth.currentHealth < playerHealth.maxHealth;
-        }
-        return true; // For other item types, you might have different conditions
     }
 
     public void RemoveFromStack(int amount)
@@ -64,9 +67,13 @@ public class InventorySlot : MonoBehaviour
         {
             Inventory inventory = FindObjectOfType<Inventory>();
             inventory.Remove(item);
+            ClearSlot();
         }
-        
+        UpdateStackSizeText();
     }
 
- 
+    private void UpdateStackSizeText()
+    {
+        stackSizeText.text = stackSize > 1 ? stackSize.ToString() : "";
+    }
 }

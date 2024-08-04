@@ -1,14 +1,15 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
+[System.Serializable]
 public class Item : ScriptableObject
 {
-    public string itemName = "New Item";
-    public Sprite icon = null;
-    public int maxStackSize = 99;
+    public string itemName;
+    public Sprite icon;
+    public int maxStackSize = 99; // Maximum number of items per stack
 
-    public virtual void Use()
+    public virtual bool Use()
     {
         Debug.Log("Using " + itemName);
+        return true; // Default implementation, override in derived classes
     }
 }

@@ -16,3 +16,4 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: ef4b723dabe793e48aa1234abbd1bd20, type: 3}
   maxStackSize: 99
   healthAmount: 75
+  healEffectPrefab: {fileID: 17429025184232660, guid: 262f7b79e59bf2240b155fc6c5b3394a, type: 3}
